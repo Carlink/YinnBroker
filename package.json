@@ -1,0 +1,28 @@
+{
+  "name": "yinnbroker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mqttBroker.js",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mosca": "^2.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node mqttBroker.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Carlink/YinnBroker.git"
+  },
+  "keywords": [
+    "yinn",
+    "domotics"
+  ],
+  "author": "Carlos Castro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Carlink/YinnBroker/issues"
+  },
+  "homepage": "https://github.com/Carlink/YinnBroker#readme"
+}
