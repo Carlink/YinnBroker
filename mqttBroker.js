@@ -18,8 +18,8 @@ var mosca = require('mosca');
 
 var server = new mosca.Server({
   //host: '192.168.1.76',
-  host: '127.0.0.1',
-  port: 3000
+  host: '192.168.1.77',
+  port: 8080
 });
 
 server.on('clientConnected', function(client) {
@@ -42,20 +42,29 @@ server.on('unsubscribed', function(topic, client) {
   console.log('unsubscribed: ' + client.id);    
 });
 
-server.on('ready', function() {
-  console.log('Mosca server is up and running');
+server.on('message', function(topic, message) {
+  console.log(topic);
+  console.log(message);
 });
+
 // server.on('temperatura', function(topic, client) {
 //   firebase.database().ref('dispositivos/cliente-1').child('temperatura').set(topic.payload)
 // });
+// var ledCommand = '001';
+server.on('ready', setup);
 
-var ledCommand = '001';
+// fired when the mqtt server is ready
+function setup() {
+  console.log('Mosca está corriendo');
+  // server.subscribe('Conexion');
+}
 
-setInterval(function() {
-  ledCommand = (ledCommand === '001') ? '002' : '001';
-  server.publish({topic: 'LEDToggle', payload: ledCommand});
-}, 1000);
+// var ledCommand = '001';
 
+// setInterval(function() {
+//   ledCommand = (ledCommand === '001') ? '002' : '001';
+//   server.publish({topic: 'Conexion', payload: ledCommand});
+// }, 1000);
 
 
 // setInterval(function() {
