@@ -1,7 +1,6 @@
-//Hola Dorian
-// Bla Bla
-// lala
 var mosca = require('mosca');
+var firebase = require("firebase");
+
 // import * as firebase from 'firebase/app' ;
 // import 'firebase/auth';
 // import 'firebase/database';
@@ -14,7 +13,15 @@ var mosca = require('mosca');
 //     storageBucket: "yinn-7dbd2.appspot.com",
 //     messagingSenderId: "17822749213"
 // };
-
+// Initialize Firebase
+// TODO: Replace with your project's customized code snippet
+var config = {
+  apiKey: "AIzaSyASrcvPNyhSlUYTbg0o2g_MFfw5rTdgnS0",
+  authDomain: "yinn-7dbd2.firebaseapp.com",
+  databaseURL: "https://yinn-7dbd2.firebaseio.com",
+  storageBucket: "yinn-7dbd2.appspot.com",
+};
+firebase.initializeApp(config);
 
 var server = new mosca.Server({
   //host: '192.168.1.76',
