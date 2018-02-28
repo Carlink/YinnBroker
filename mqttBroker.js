@@ -25,7 +25,11 @@ firebase.initializeApp(config);
 
 var server = new mosca.Server({
   //host: '192.168.1.76',
+<<<<<<< Updated upstream
   host: '192.168.100.13',
+=======
+  host: '192.168.100.151',
+>>>>>>> Stashed changes
   port: 8080
 });
 
