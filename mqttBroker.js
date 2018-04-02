@@ -24,10 +24,12 @@ var config = {
 };
 firebase.initializeApp(config);
 
+console.log('Servidor Mosca Corriendo en: ' + getIPAddress());
+
 var server = new mosca.Server({
   //host: '192.168.1.76',
-  host: '100.87.207.100',
-  port: 1883
+  host: getIPAddress(),
+  port: 8000
 });
 
 server.on('clientConnected', function(client) {
@@ -52,15 +54,47 @@ server.on('unsubscribed', function(topic, client) {
 
 server.on('published', function(packet, client) {
   let topico = packet.topic;
-  let mensaje = stringToBoolean(packet.payload.toString());
+  let mensaje = '';
+  //let mensaje = packet.payload.toString();
+  // let mensaje = stringToBoolean(packet.payload.toString());
+  // let mensaje = parseInt(packet.payload.toString());
 
-  let obj = {
-    'ventilador': mensaje
-  };
 
-  firebase.database().ref('dispositivos/cliente-1').child('actuadores').update(obj,(function (err) {
 
-  }));
+  if(topico == 'sensores_internos/temperatura'){
+    mensaje = parseInt(packet.payload.toString());
+    let obj = {
+      'sensores_internos/temperatura': mensaje
+    };
+    firebase.database().ref('dispositivos/cliente-1').update(obj,(function (err) {
+
+    }));
+  }
+  
+
+  if(topico == 'sensores_internos/luminosidad'){
+    mensaje = parseInt(packet.payload.toString());
+    let obj = {
+      'sensores_internos/luminosidad': mensaje
+    };
+    firebase.database().ref('dispositivos/cliente-1').update(obj,(function (err) {
+
+    }));
+  }
+
+
+  if(topico == 'sensores_internos/humedad'){
+    mensaje = parseInt(packet.payload.toString());
+    let obj = {
+      'sensores_internos/humedad': mensaje
+    };
+    firebase.database().ref('dispositivos/cliente-1').update(obj,(function (err) {
+
+    }));
+  }
+  
+
+  
 
   console.log('Publicado en topic:' + topico + ' - mensaje:' + mensaje);
 });
@@ -82,7 +116,9 @@ server.on('published', function(packet, client) {
 // server.on('temperatura', function(topic, client) {
 //   firebase.database().ref('dispositivos/cliente-1').child('temperatura').set(topic.payload)
 // });
-var ledCommand = '';
+var temperaturaInterna = '';
+var luminosidadInterna = '';
+var movimientoInterno = '';
 
 server.on('ready', setup);
 
@@ -90,9 +126,21 @@ server.on('ready', setup);
 function setup() {
   console.log('Mosca está corriendo');
 
-  firebase.database().ref('dispositivos/cliente-1').child('actuadores/ventilador').on('value',(snapshot)=>{
-    ledCommand = snapshot.val();
-    server.publish({topic: 'LEDToggle', payload: ledCommand}, function() {
+  firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/temperatura').on('value',(snapshot)=>{
+    temperaturaInterna = snapshot.val();
+    server.publish({topic: 'sensores_internos/temperatura', payload: temperaturaInterna}, function() {
+      console.log('Dato Actualizado');
+    });
+  })
+  firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/luminosidad').on('value',(snapshot)=>{
+    luminosidadInterna = snapshot.val();
+    server.publish({topic: 'sensores_internos/luminosidad', payload: luminosidadInterna}, function() {
+      console.log('Dato Actualizado');
+    });
+  })
+  firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/humedad').on('value',(snapshot)=>{
+    movimientoInterno = snapshot.val();
+    server.publish({topic: 'sensores_internos/humedad', payload: movimientoInterno}, function() {
       console.log('Dato Actualizado');
     });
   })
@@ -105,6 +153,20 @@ function stringToBoolean(string){
         case "false": case "no": case "0": case null: return false;
         default: return Boolean(string);
     }
+}
+
+function getIPAddress() {
+  var interfaces = require('os').networkInterfaces();
+  for (var devName in interfaces) {
+    var iface = interfaces[devName];
+
+    for (var i = 0; i < iface.length; i++) {
+      var alias = iface[i];
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal)
+        return alias.address;
+    }
+  }
+  return '0.0.0.0';
 }
 
 
