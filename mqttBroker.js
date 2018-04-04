@@ -33,11 +33,75 @@ var server = new mosca.Server({
 });
 
 server.on('clientConnected', function(client) {
-  console.log('client connected', client.id);
+  console.log('Cliente conectado:', client.id);
+  if(client.id.toString() == 'YinnConnect'){
+    let obj = {
+      'YinnConnect': true
+    };
+    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+
+    }));
+  }
+  if(client.id.toString() == 'YinnLight'){
+    let obj = {
+      'YinnLight': true
+    };
+    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+
+    }));
+  }
+  if(client.id.toString() == 'YinnSense'){
+    let obj = {
+      'YinnSense': true
+    };
+    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+
+    }));
+  }
+  if(client.id.toString() == 'YinnWeather'){
+    let obj = {
+      'YinnWeather': true
+    };
+    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+
+    }));
+  }
 });
 
 server.on('clientDisconnected', function(client) {
-  console.log('client disconnected', client.id);
+  console.log('Cliente desconectado:', client.id);
+  if(client.id.toString() == 'YinnConnect'){
+    let obj = {
+      'YinnConnect': false
+    };
+    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+
+    }));
+  }
+  if(client.id.toString() == 'YinnLight'){
+    let obj = {
+      'YinnLight': false
+    };
+    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+
+    }));
+  }
+  if(client.id.toString() == 'YinnSense'){
+    let obj = {
+      'YinnSense': false
+    };
+    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+
+    }));
+  }
+  if(client.id.toString() == 'YinnWeather'){
+    let obj = {
+      'YinnWeather': false
+    };
+    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+
+    }));
+  }
 });
 
 // server.on('published', function(packet, client) {
@@ -45,11 +109,11 @@ server.on('clientDisconnected', function(client) {
 // });
 
 server.on('subscribed', function(topic, client) {
-  console.log('subscribed: ' + client.id);
+  console.log('Se ha suscrito: ' + client.id + ' a ' + topic);
 });
 
 server.on('unsubscribed', function(topic, client) {
-  console.log('unsubscribed: ' + client.id);    
+  console.log('Se ha unsuscrito: ' + client.id);    
 });
 
 server.on('published', function(packet, client) {
@@ -92,11 +156,20 @@ server.on('published', function(packet, client) {
 
     }));
   }
+
+  if(topico == 'actuadores/ventilador'){
+    console.log('Antes de procesar: ' + packet.payload.toString());
+    mensaje = parseInt(packet.payload.toString());
+  }
+
+  if(topico == 'actuadores/bombilla'){
+    mensaje = parseInt(packet.payload.toString());
+  }
   
 
   
 
-  console.log('Publicado en topic:' + topico + ' - mensaje:' + mensaje);
+  console.log('Publicado en topic: ' + topico + ' - mensaje: ' + mensaje);
 });
 
 // server.on('message', function(topic, message) {
@@ -116,9 +189,15 @@ server.on('published', function(packet, client) {
 // server.on('temperatura', function(topic, client) {
 //   firebase.database().ref('dispositivos/cliente-1').child('temperatura').set(topic.payload)
 // });
+
+// Sensores Internos
 var temperaturaInterna = '';
 var luminosidadInterna = '';
 var movimientoInterno = '';
+
+// Actuadores
+var ventilador = '';
+var bombilla = '';
 
 server.on('ready', setup);
 
@@ -126,24 +205,49 @@ server.on('ready', setup);
 function setup() {
   console.log('Mosca está corriendo');
 
+  // Sensores Internos
   firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/temperatura').on('value',(snapshot)=>{
     temperaturaInterna = snapshot.val();
     server.publish({topic: 'sensores_internos/temperatura', payload: temperaturaInterna}, function() {
-      console.log('Dato Actualizado');
+      console.log('Temperatura Actualizada con: ', temperaturaInterna);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/luminosidad').on('value',(snapshot)=>{
     luminosidadInterna = snapshot.val();
     server.publish({topic: 'sensores_internos/luminosidad', payload: luminosidadInterna}, function() {
-      console.log('Dato Actualizado');
+      console.log('Luminosidad Actualizada con: ', luminosidadInterna);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/humedad').on('value',(snapshot)=>{
     movimientoInterno = snapshot.val();
     server.publish({topic: 'sensores_internos/humedad', payload: movimientoInterno}, function() {
-      console.log('Dato Actualizado');
+      console.log('Humedad Actualizada con: ', movimientoInterno);
     });
   })
+
+  // Actuadores
+  firebase.database().ref('dispositivos/cliente-1').child('actuadores/ventilador').on('value',(snapshot)=>{
+    ventilador = snapshot.val() ? '0' : '1';
+    server.publish({topic: 'actuadores/ventilador', payload: ventilador}, function() {
+      console.log('Ventilador Actualizado con: ', ventilador);
+    });
+  })
+  firebase.database().ref('dispositivos/cliente-1').child('actuadores/bombilla').on('value',(snapshot)=>{
+    bombilla = snapshot.val() ? '0' : '1';
+    server.publish({topic: 'actuadores/bombilla', payload: bombilla}, function() {
+      console.log('Bombilla Actualizada con: ', bombilla);
+    });
+  })
+
+  let obj = {
+      'YinnConnect': false,
+      'YinnLight': false,
+      'YinnSense': false,
+      'YinnWeather': false
+    };
+    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+
+    }));
   // server.subscribe('Conexion');
 }
 
