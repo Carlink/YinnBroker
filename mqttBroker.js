@@ -239,6 +239,16 @@ function setup() {
     });
   })
 
+  //Rutinas
+
+  firebase.database().ref('dispositivos/cliente-1').child('rutinas').on('value',(snapshot)=>{
+    let obj = snapshot.exportVal();
+
+    Object.keys(obj).forEach(function(key) {
+      eval(obj[key].code);
+    });
+  })
+
   let obj = {
       'YinnConnect': false,
       'YinnLight': false,
