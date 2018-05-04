@@ -245,28 +245,34 @@ function setup() {
     let obj = snapshot.exportVal();
 
     Object.keys(obj).forEach(function(key) {
-      eval(obj[key].code);
+      try {
+        eval(obj[key].code);
+        // console.log((obj[key].code));
+      } catch (e) {
+        console.log(e);
+      }
+      
     });
   })
 
   let obj = {
-      'YinnConnect': false,
-      'YinnLight': false,
-      'YinnSense': false,
-      'YinnWeather': false
-    };
-    firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
+    'YinnConnect': false,
+    'YinnLight': false,
+    'YinnSense': false,
+    'YinnWeather': false
+  };
+  firebase.database().ref('dispositivos/cliente-1/dispositivos_activos').update(obj,(function (err) {
 
-    }));
+  }));
   // server.subscribe('Conexion');
 }
 
 function stringToBoolean(string){
-    switch(string.toLowerCase().trim()){
-        case "true": case "yes": case "1": return true;
-        case "false": case "no": case "0": case null: return false;
-        default: return Boolean(string);
-    }
+  switch(string.toLowerCase().trim()){
+    case "true": case "yes": case "1": return true;
+    case "false": case "no": case "0": case null: return false;
+    default: return Boolean(string);
+  }
 }
 
 function getIPAddress() {
