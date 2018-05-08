@@ -289,6 +289,19 @@ function getIPAddress() {
   return '0.0.0.0';
 }
 
+function yinnlightswitch(sw) {
+
+  let obj = {
+      'bombilla': sw
+  };
+  
+  firebase.database().ref('dispositivos/cliente-1/actuadores').update(obj,(function (err) {
+    console.log('actualizado!!');
+    console.log('error:',err);
+  })); 
+
+}
+
 
 //var ledCommand = '001';
 
