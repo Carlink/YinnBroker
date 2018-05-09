@@ -1,5 +1,6 @@
 var mosca = require('mosca');
 var firebase = require("firebase");
+var napa = require('napajs');
 
 // import * as firebase from 'firebase/app' ;
 // import 'firebase/auth';
@@ -246,7 +247,10 @@ function setup() {
 
     Object.keys(obj).forEach(function(key) {
       try {
-        eval(obj[key].code);
+        // while(true){
+          eval(obj[key].code);
+        // }   
+        
         // console.log((obj[key].code));
       } catch (e) {
         console.log(e);
