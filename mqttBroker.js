@@ -25,13 +25,15 @@ var config = {
 };
 firebase.initializeApp(config);
 
-console.log('Servidor Mosca Corriendo en: ' + getIPAddress());
+
 
 var server = new mosca.Server({
   //host: '192.168.1.76',
   host: getIPAddress(),
   port: 8000
 });
+
+console.log('Servidor Mosca Corriendo en: ' + getIPAddress());
 
 server.on('clientConnected', function(client) {
   console.log('Cliente conectado:', client.id);
