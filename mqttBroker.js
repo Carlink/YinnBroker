@@ -2,6 +2,11 @@ var mosca = require('mosca');
 var firebase = require("firebase");
 var napa = require('napajs');
 
+
+// Variables
+
+var rutinas = {};
+
 // import * as firebase from 'firebase/app' ;
 // import 'firebase/auth';
 // import 'firebase/database';
@@ -24,7 +29,6 @@ var config = {
   storageBucket: "yinn-7dbd2.appspot.com",
 };
 firebase.initializeApp(config);
-
 
 
 var server = new mosca.Server({
@@ -136,6 +140,8 @@ server.on('published', function(packet, client) {
     firebase.database().ref('dispositivos/cliente-1').update(obj,(function (err) {
 
     }));
+
+    correrRutinas();
   }
   
 
@@ -147,6 +153,8 @@ server.on('published', function(packet, client) {
     firebase.database().ref('dispositivos/cliente-1').update(obj,(function (err) {
 
     }));
+
+    correrRutinas();
   }
 
 
@@ -158,6 +166,8 @@ server.on('published', function(packet, client) {
     firebase.database().ref('dispositivos/cliente-1').update(obj,(function (err) {
 
     }));
+
+    correrRutinas();
   }
 
   if(topico == 'actuadores/ventilador'){
@@ -245,20 +255,9 @@ function setup() {
   //Rutinas
 
   firebase.database().ref('dispositivos/cliente-1').child('rutinas').on('value',(snapshot)=>{
-    let obj = snapshot.exportVal();
-
-    Object.keys(obj).forEach(function(key) {
-      try {
-        // while(true){
-          eval(obj[key].code);
-        // }   
-        
-        // console.log((obj[key].code));
-      } catch (e) {
-        console.log(e);
-      }
-      
-    });
+    rutinas = snapshot.exportVal();
+    
+    correrRutinas();
   })
 
   let obj = {
@@ -271,6 +270,28 @@ function setup() {
 
   }));
   // server.subscribe('Conexion');
+}
+
+function correrRutinas(){
+  let obj = rutinas;
+
+  if(obj){
+      Object.keys(obj).forEach(function(key) {
+        if(obj[key].activo && obj[key].code != ''){
+            try {
+            // while(true){
+              eval(obj[key].code);
+            // }   
+            
+            // console.log((obj[key].code));
+          } catch (e) {
+            console.log(e);        
+          }
+        }
+
+      
+      });
+    }
 }
 
 function stringToBoolean(string){
