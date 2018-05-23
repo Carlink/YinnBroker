@@ -36,6 +36,8 @@ var j = schedule.scheduleJob('51 * * * *', function(){
   console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAA!');
 });
 
+j.cancel();
+
 var config = {
   apiKey: "AIzaSyASrcvPNyhSlUYTbg0o2g_MFfw5rTdgnS0",
   authDomain: "yinn-7dbd2.firebaseapp.com",
