@@ -3,6 +3,7 @@
 var mosca = require('mosca');
 var firebase = require("firebase");
 var napa = require('napajs');
+var schedule = require('node-schedule');
 
 // Declaracion de Variables
 
@@ -30,6 +31,10 @@ var bombilla = false;
 var consumoBombilla = '';
 
 // Declaracion de Variables de configuración
+
+var j = schedule.scheduleJob('51 * * * *', function(){
+  console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAA!');
+});
 
 var config = {
   apiKey: "AIzaSyASrcvPNyhSlUYTbg0o2g_MFfw5rTdgnS0",
@@ -418,6 +423,7 @@ function stringToBoolean(string){
 }
 
 function getIPAddress() {
+  // return '192.168.0.100';
   var interfaces = require('os').networkInterfaces();
   for (var devName in interfaces) {
     var iface = interfaces[devName];
@@ -434,7 +440,7 @@ function getIPAddress() {
 function yinnlightswitch(sw) {
 
   let obj = {
-      'bombilla': sw
+      'ventilador': sw
   };
   
   firebase.database().ref('dispositivos/cliente-1/actuadores').update(obj,(function (err) {
