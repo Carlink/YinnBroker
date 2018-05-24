@@ -32,11 +32,7 @@ var consumoBombilla = '';
 
 // Declaracion de Variables de configuración
 
-var j = schedule.scheduleJob('51 * * * *', function(){
-  console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAA!');
-});
 
-j.cancel();
 
 var config = {
   apiKey: "AIzaSyASrcvPNyhSlUYTbg0o2g_MFfw5rTdgnS0",
@@ -463,6 +459,82 @@ function yinnconnectswitch(sw) {
     console.log('error:',err);
   })); 
 
+}
+
+function crearCron(min, hr, lu, ma, mi, ju, vi, sa, dom, funcion){
+
+  let cadenaCron = '';
+  let dias = '';
+
+  if(lu == true){
+    dias = dias + '1'
+  }
+  if(ma == true){
+    if(dias == ''){
+      dias = dias + '2'
+    }
+    else{
+      dias = dias + ',2'
+    }
+  }
+  if(mi == true){
+    if(dias == ''){
+      dias = dias + '3'
+    }
+    else{
+      dias = dias + ',3'
+    }
+  }
+  if(ju == true){
+    if(dias == ''){
+      dias = dias + '4'
+    }
+    else{
+      dias = dias + ',4'
+    }
+  }
+  if(vi == true){
+    if(dias == ''){
+      dias = dias + '5'
+    }
+    else{
+      dias = dias + ',5'
+    }
+  }
+  if(sa == true){
+    if(dias == ''){
+      dias = dias + '6'
+    }
+    else{
+      dias = dias + ',6'
+    }
+  }
+  if(dom == true){
+    if(dias == ''){
+      dias = dias + '7'
+    }
+    else{
+      dias = dias + ',7'
+    }
+  }
+  if(lu == false && ma == false && mi == false && ju == false && vi == false && sa == false && dom == false){
+    dias = '*';
+  }
+
+  cadenaCron = '* ' + (min != 0 ? min : '*') + ' ' + (hr != 0 ? hr : '*') + ' * * ' + dias;
+
+  console.log(cadenaCron);
+
+  var j = schedule.scheduleJob('* 37 17 * * *' , function(){
+    try {
+      eval(funcion);
+    }
+    catch(error) {
+      console.error(error);
+    }
+  });
+
+  // j.cancel();
 }
 
 
