@@ -2,7 +2,6 @@
 
 var mosca = require('mosca');
 var firebase = require("firebase");
-var napa = require('napajs');
 var schedule = require('node-schedule');
 
 // Declaracion de Variables
@@ -50,6 +49,8 @@ var server = new mosca.Server({
 });
 
 // Inicio del programa
+
+
 
 console.log('Servidor Mosca Corriendo en: ' + getIPAddress());
 
@@ -398,6 +399,7 @@ function correrRutinas(){
         if(obj[key].activo && obj[key].code != ''){
             try {
             // while(true){
+              console.log(obj[key].code);
               eval(obj[key].code);
             // }   
             
@@ -438,7 +440,7 @@ function getIPAddress() {
 function yinnlightswitch(sw) {
 
   let obj = {
-      'ventilador': sw
+      'bombilla': sw
   };
   
   firebase.database().ref('dispositivos/cliente-1/actuadores').update(obj,(function (err) {
@@ -521,17 +523,12 @@ function crearCron(min, hr, lu, ma, mi, ju, vi, sa, dom, funcion){
     dias = '*';
   }
 
-  cadenaCron = '* ' + (min != 0 ? min : '*') + ' ' + (hr != 0 ? hr : '*') + ' * * ' + dias;
+  cadenaCron = '1 ' + (min != 0 ? min : '*') + ' ' + (hr != 0 ? hr : '*') + ' * * ' + dias;
 
   console.log(cadenaCron);
 
-  var j = schedule.scheduleJob('* 37 17 * * *' , function(){
-    try {
-      eval(funcion);
-    }
-    catch(error) {
-      console.error(error);
-    }
+  var j = schedule.scheduleJob(cadenaCron , function(){
+    eval(funcion);
   });
 
   // j.cancel();
