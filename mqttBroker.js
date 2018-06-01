@@ -412,8 +412,8 @@ function correrRutinas(){
         if(obj[key].activo && obj[key].code != ''){
             try {
             // while(true){
-              // console.log(obj[key].code);
-              eval(obj[key].code);
+              console.log(obj[key].code.replace(/\s+/g, ''));
+              eval(obj[key].code.replace(/\s+/g, ''));
             // }   
             
             // console.log((obj[key].code));
@@ -538,13 +538,39 @@ function crearCron(min, hr, lu, ma, mi, ju, vi, sa, dom, funcion){
 
   cadenaCron = '1 ' + (min != 0 ? min : '*') + ' ' + (hr != 0 ? hr : '*') + ' * * ' + dias;
 
-  // console.log(cadenaCron);
+  console.log(cadenaCron);
 
   var j = schedule.scheduleJob(cadenaCron , function(){
-    eval(funcion);
+    eval(funcion.replace(/(\r\n\t|\n|\r\t)/gm,""));
   });
 
   // j.cancel();
+}
+
+
+var lock = 0;
+
+function hacerDentroDe(number_tiempo, dropdown_medida, funcion){
+  if(lock == 0){
+    lock = 1;
+    let tiempo = dropdown_medida==1 ? number_tiempo*1000*60 : number_tiempo*1000*60*60;
+    let startTime = new Date(Date.now() + tiempo);
+
+    console.log("tiempo: ", tiempo);
+    console.log("startTime: ", startTime);
+    console.log("Funcion: ", funcion);
+
+
+
+
+    var j = schedule.scheduleJob({ start: startTime, rule: '*/1 * * * * *' }, function(){
+      eval(funcion.replace(/(\r\n\t|\n|\r\t)/gm,""));
+      lock = 0;
+    });
+  }
+  else{
+    console.log("Este evento temporal no se puede repetir hasta que finalice");
+  }
 }
 
 
