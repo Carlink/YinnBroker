@@ -310,25 +310,25 @@ function setup() {
   firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/temperatura').on('value',(snapshot)=>{
     temperaturaInterna = snapshot.val();
     server.publish({topic: 'sensores_internos/temperatura', payload: temperaturaInterna}, function() {
-      // console.log('Temperatura Interna Actualizada con: ', temperaturaInterna);
+      console.log('Temperatura Interna Actualizada con: ', temperaturaInterna);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/luminosidad').on('value',(snapshot)=>{
     luminosidadInterna = snapshot.val();
     server.publish({topic: 'sensores_internos/luminosidad', payload: luminosidadInterna}, function() {
-      // console.log('Luminosidad Interna Actualizada con: ', luminosidadInterna);
+      console.log('Luminosidad Interna Actualizada con: ', luminosidadInterna);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/humedad').on('value',(snapshot)=>{
     humedadInterno = snapshot.val();
     server.publish({topic: 'sensores_internos/humedad', payload: humedadInterno}, function() {
-      // console.log('Humedad Interna Actualizada con: ', humedadInterno);
+      console.log('Humedad Interna Actualizada con: ', humedadInterno);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('sensores_internos/movimiento').on('value',(snapshot)=>{
     movimientoInterno = snapshot.val();
     server.publish({topic: 'sensores_internos/movimiento', payload: movimientoInterno}, function() {
-      // console.log('Movimiento Interna Actualizada con: ', movimientoInterno);
+      console.log('Movimiento Interna Actualizada con: ', movimientoInterno);
     });
   })
 
@@ -337,31 +337,31 @@ function setup() {
   firebase.database().ref('dispositivos/cliente-1').child('sensores_externos/temperatura').on('value',(snapshot)=>{
     temperaturaExterna = snapshot.val();
     server.publish({topic: 'sensores_externos/temperatura', payload: temperaturaExterna}, function() {
-      // console.log('Temperatura Externa Actualizada con: ', temperaturaExterna);
+      console.log('Temperatura Externa Actualizada con: ', temperaturaExterna);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('sensores_externos/luminosidad').on('value',(snapshot)=>{
     luminosidadExterna = snapshot.val();
     server.publish({topic: 'sensores_externos/luminosidad', payload: luminosidadExterna}, function() {
-      // console.log('Luminosidad Externa Actualizada con: ', luminosidadExterna);
+      console.log('Luminosidad Externa Actualizada con: ', luminosidadExterna);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('sensores_externos/humedad').on('value',(snapshot)=>{
     humedadExterna = snapshot.val();
     server.publish({topic: 'sensores_externos/humedad', payload: humedadExterna}, function() {
-      // console.log('Humedad Externa Actualizada con: ', humedadExterna);
+      console.log('Humedad Externa Actualizada con: ', humedadExterna);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('sensores_externos/lluvia').on('value',(snapshot)=>{
     lluviaExterna = snapshot.val();
     server.publish({topic: 'sensores_externos/lluvia', payload: lluviaExterna}, function() {
-      // console.log('Lluvia Externa Actualizada con: ', lluviaExterna);
+      console.log('Lluvia Externa Actualizada con: ', lluviaExterna);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('sensores_externos/movimiento').on('value',(snapshot)=>{
     movimientoExterna = snapshot.val();
     server.publish({topic: 'sensores_externos/movimiento', payload: movimientoExterna}, function() {
-      // console.log('Movimiento Externa Actualizada con: ', movimientoExterna);
+      console.log('Movimiento Externa Actualizada con: ', movimientoExterna);
     });
   })
 
@@ -369,13 +369,13 @@ function setup() {
   firebase.database().ref('dispositivos/cliente-1').child('actuadores/ventilador').on('value',(snapshot)=>{
     ventilador = snapshot.val() ? '0' : '1';
     server.publish({topic: 'actuadores/ventilador', payload: ventilador}, function() {
-      // console.log('Ventilador Actualizado con: ', ventilador);
+      console.log('Ventilador Actualizado con: ', ventilador);
     });
   })
   firebase.database().ref('dispositivos/cliente-1').child('actuadores/bombilla').on('value',(snapshot)=>{
     bombilla = snapshot.val() ? '0' : '1';
     server.publish({topic: 'actuadores/bombilla', payload: bombilla}, function() {
-      // console.log('Bombilla Actualizada con: ', bombilla);
+      console.log('Bombilla Actualizada con: ', bombilla);
     });
   })
 
@@ -436,7 +436,7 @@ function stringToBoolean(string){
 }
 
 function getIPAddress() {
-  // return '192.168.0.100';
+  // return '192.168.8.150';
   var interfaces = require('os').networkInterfaces();
   for (var devName in interfaces) {
     var iface = interfaces[devName];
@@ -444,7 +444,7 @@ function getIPAddress() {
     for (var i = 0; i < iface.length; i++) {
       var alias = iface[i];
       if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal)
-        return alias.address;
+        return (alias.address);
     }
   }
   return '0.0.0.0';
